@@ -1,0 +1,77 @@
+<!doctype html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Proyectsso</title>
+</head>
+
+<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+
+<script type="text/javascript">
+$(function(){
+	function loadXMLDoc(dname)
+		{
+		if (window.ActiveXObject)
+		  {
+		  xhttp=new ActiveXObject("Msxml2.XMLHTTP.3.0");
+		  }
+		else
+		  {
+		  xhttp=new XMLHttpRequest();
+		  }
+		xhttp.open("GET",dname,false);
+		xhttp.send("");
+		return xhttp.responseXML;
+		}
+		
+		function displayResult()
+		{
+		xml=loadXMLDoc("bdfnaviviendafinal.xml");
+
+		
+var xsl = '<?xml version="1.0" encoding="utf-8"?><!-- DWXMLSource="bdfnaviviendafinal.xml" --><!DOCTYPE xsl:stylesheet  [<!ENTITY nbsp   "&#160;"><!ENTITY copy   "&#169;"><!ENTITY reg    "&#174;"><!ENTITY trade  "&#8482;"><!ENTITY mdash  "&#8212;"><!ENTITY ldquo  "&#8220;"><!ENTITY rdquo  "&#8221;"> <!ENTITY pound  "&#163;"><!ENTITY yen    "&#165;"><!ENTITY euro   "&#8364;">]><xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata" xmlns:d="http://schemas.microsoft.com/ado/2007/08/dataservices"><xsl:output method="html" encoding="utf-8"/><xsl:template match="/"><xsl:for-each select="atom:feed/atom:entry/atom:content/m:properties/d:RowKey"><table width="200" border="1"><tr><td><h4>RowKey:</h4></td><td><xsl:value-of select="."/></td></tr><tr><td><h4>Proyecto:</h4></td><td><xsl:value-of select="../d:nombreproyecto"/></td></tr><tr><td><h4>Dirección:</h4></td><td><xsl:value-of select="../d:direccionproyecto"/></td></tr><tr><td><h4>Barrio:</h4></td><td><xsl:value-of select="../d:barrio"/></td></tr></table><br /></xsl:for-each></xsl:template></xsl:stylesheet>';
+
+if (window.DOMParser)
+  {
+  parser=new DOMParser();
+  xmlDoc=parser.parseFromString(xsl,"text/xml");
+  }
+else // Internet Explorer
+  {
+  xmlDoc=new ActiveXObject("Microsoft.XMLDOM");
+  xmlDoc.async=false;
+  xmlDoc.loadXML(xsl);
+  }
+  xsl = xmlDoc;
+		
+		
+		console.log(xsl)
+		if (window.ActiveXObject)
+		  {
+			  
+		  ex=xml.transformNode(xsl);
+		  document.getElementById("contenido").innerHTML=ex;
+		  }
+		// code for Mozilla, Firefox, Opera, etc.
+		else if (document.implementation && document.implementation.createDocument)
+		  {
+		  xsltProcessor=new XSLTProcessor();
+		  xsltProcessor.importStylesheet(xsl);
+		  resultDocument = xsltProcessor.transformToFragment(xml,document);
+		  document.getElementById("contenido").appendChild(resultDocument);
+		  }
+		}
+		
+		displayResult()
+
+})
+
+</script>
+
+<body>
+<h2>Datos</h2>
+
+<div id="contenido"></div>
+
+</body>
+</html>
